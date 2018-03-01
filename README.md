@@ -31,7 +31,7 @@ Here I will give the instructions about `docker pull`, `docker build` and `docke
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE] (LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details
 
 ## Supported versions
 
