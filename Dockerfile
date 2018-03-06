@@ -1,13 +1,13 @@
 FROM golang:alpine3.7 as builder
 
-# Build Go application to after copy to final container
-WORKDIR /go/src/github.com/alexellis/href-counter/
+LABEL maintainer "Hugo Fonseca <https://github.com/hugomcfonseca>"
 
-RUN go get -d -v
+WORKDIR /go/src/github.com/hugomcfonseca/couchbase-tasker/app
 
-COPY app.go    .
-
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+RUN \
+    apk add --update --no-cache git \
+        && go get -d -v \
+        && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cb_tasker .
 
 FROM alpine:3.7
 
@@ -16,10 +16,6 @@ LABEL maintainer "Hugo Fonseca <https://github.com/hugomcfonseca>"
 ENV \
     CB_ACTION='init'
 
-WORKDIR /app
+COPY --from=builder /go/src/github.com/hugomcfonseca/couchbase-tasker/app/cb_tasker /usr/local/bin
 
-COPY --from=builder /go/path /app
-
-ENTRYPOINT [ "" ]
-
-CMD
+ENTRYPOINT [ "cb_tasker" ]
